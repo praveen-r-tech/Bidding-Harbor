@@ -1,4 +1,4 @@
-package com.praveen.biddingharbor.dto;
+package com.praveen.biddingharbor.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
 

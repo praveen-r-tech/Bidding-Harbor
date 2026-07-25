@@ -1,4 +1,4 @@
-package com.praveen.biddingharbor.dto;
+package com.praveen.biddingharbor.dto.user;
 
 import com.praveen.biddingharbor.entity.enums.AccountStatus;
 import com.praveen.biddingharbor.entity.enums.Role;

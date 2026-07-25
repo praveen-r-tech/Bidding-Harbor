@@ -1,9 +1,9 @@
 package com.praveen.biddingharbor.security;
 
-import com.praveen.biddingharbor.dto.AuthResponse;
-import com.praveen.biddingharbor.dto.UserLoginRequest;
-import com.praveen.biddingharbor.dto.UserRegistrationRequest;
-import com.praveen.biddingharbor.dto.UserResponse;
+import com.praveen.biddingharbor.dto.auth.AuthResponse;
+import com.praveen.biddingharbor.dto.auth.UserLoginRequest;
+import com.praveen.biddingharbor.dto.auth.UserRegistrationRequest;
+import com.praveen.biddingharbor.dto.user.UserResponse;
 
 public interface AuthenticationService {
 

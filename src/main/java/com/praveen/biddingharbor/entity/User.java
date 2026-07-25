@@ -5,6 +5,8 @@ import com.praveen.biddingharbor.entity.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.time.LocalDateTime;
 
 @Entity
@@ -56,6 +58,14 @@ public class User
 
     @Column(nullable = false)
     private boolean enabled;
+
+    @OneToMany(mappedBy = "seller")
+    @Builder.Default
+    private List<Auction> auctions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "winner")
+    @Builder.Default
+    private List<Auction> wonAuctions = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
