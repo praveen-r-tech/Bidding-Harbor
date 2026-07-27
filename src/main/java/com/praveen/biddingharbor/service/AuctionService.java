@@ -2,6 +2,7 @@ package com.praveen.biddingharbor.service;
 
 import com.praveen.biddingharbor.dto.auction.AuctionResponse;
 import com.praveen.biddingharbor.dto.auction.CreateAuctionRequest;
+import com.praveen.biddingharbor.dto.auction.RejectAuctionRequest;
 import com.praveen.biddingharbor.dto.auction.UpdateAuctionRequest;
 
 import java.util.List;
@@ -30,4 +31,15 @@ public interface AuctionService {
     AuctionResponse publishAuction(
             Long auctionId,
             String username);
+
+    List<AuctionResponse> getPendingAuctions();
+
+    AuctionResponse approveAuction(
+            Long auctionId,
+            String adminUsername);
+
+    AuctionResponse rejectAuction(
+            Long auctionId,
+            String adminUsername,
+            RejectAuctionRequest request);
 }

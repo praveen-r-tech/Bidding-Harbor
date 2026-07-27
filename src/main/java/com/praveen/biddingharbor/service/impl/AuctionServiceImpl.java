@@ -2,10 +2,12 @@ package com.praveen.biddingharbor.service.impl;
 
 import com.praveen.biddingharbor.dto.auction.AuctionResponse;
 import com.praveen.biddingharbor.dto.auction.CreateAuctionRequest;
+import com.praveen.biddingharbor.dto.auction.RejectAuctionRequest;
 import com.praveen.biddingharbor.dto.auction.UpdateAuctionRequest;
 import com.praveen.biddingharbor.entity.Auction;
 import com.praveen.biddingharbor.entity.User;
 import com.praveen.biddingharbor.entity.enums.AuctionStatus;
+import com.praveen.biddingharbor.exception.AuctionAlreadyReviewedException;
 import com.praveen.biddingharbor.exception.AuctionNotFoundException;
 import com.praveen.biddingharbor.exception.UnauthorizedAuctionAccessException;
 import com.praveen.biddingharbor.exception.UserNotFoundException;
@@ -15,6 +17,7 @@ import com.praveen.biddingharbor.service.AuctionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -163,6 +166,76 @@ public class AuctionServiceImpl implements AuctionService {
         Auction savedAuction = auctionRepository.save(auction);
 
         return mapToResponse(savedAuction);
+    }
+
+    @Override
+    public List<AuctionResponse> getPendingAuctions() {
+
+        return auctionRepository.findByAuctionStatus(
+                        AuctionStatus.PENDING_APPROVAL)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    @Override
+    public AuctionResponse approveAuction(
+            Long auctionId,
+            String adminUsername) {
+
+        Auction auction = auctionRepository.findById(auctionId)
+                .orElseThrow(() ->
+                        new AuctionNotFoundException("Auction not found."));
+
+        if (auction.isApproved()) {
+            throw new AuctionAlreadyReviewedException(
+                    "Auction has already been reviewed.");
+        }
+
+        User admin = userRepository.findByUsername(adminUsername)
+                .orElseThrow(() ->
+                        new UserNotFoundException("Admin not found."));
+
+        auction.setApproved(true);
+        auction.setApprovedBy(admin);
+        auction.setApprovalDate(LocalDateTime.now());
+
+        // Keep LIVE for now since we're still testing.
+        auction.setAuctionStatus(AuctionStatus.LIVE);
+
+        Auction updatedAuction = auctionRepository.save(auction);
+
+        return mapToResponse(updatedAuction);
+    }
+
+    @Override
+    public AuctionResponse rejectAuction(
+            Long auctionId,
+            String adminUsername,
+            RejectAuctionRequest request) {
+
+        Auction auction = auctionRepository.findById(auctionId)
+                .orElseThrow(() ->
+                        new AuctionNotFoundException("Auction not found."));
+
+        if (auction.isApproved()) {
+            throw new AuctionAlreadyReviewedException(
+                    "Auction has already been reviewed.");
+        }
+
+        User admin = userRepository.findByUsername(adminUsername)
+                .orElseThrow(() ->
+                        new UserNotFoundException("Admin not found."));
+
+        auction.setApproved(false);
+        auction.setApprovedBy(admin);
+        auction.setApprovalDate(LocalDateTime.now());
+        auction.setRejectionReason(request.reason());
+        auction.setAuctionStatus(AuctionStatus.REJECTED);
+
+        Auction updatedAuction = auctionRepository.save(auction);
+
+        return mapToResponse(updatedAuction);
     }
 
     private AuctionResponse mapToResponse(Auction auction) {

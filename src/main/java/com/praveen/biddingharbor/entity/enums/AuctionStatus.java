@@ -4,6 +4,7 @@ public enum AuctionStatus {
 
     DRAFT,
     PENDING_APPROVAL,
+    REJECTED,
     UPCOMING,
     LIVE,
     ENDED,

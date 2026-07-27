@@ -16,4 +16,5 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
 
     List<Auction> findByAuctionStatus(AuctionStatus auctionStatus);
 
+    List<Auction> findByApprovedFalse();
 }
