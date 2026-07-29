@@ -200,8 +200,7 @@ public class AuctionServiceImpl implements AuctionService {
         auction.setApprovedBy(admin);
         auction.setApprovalDate(LocalDateTime.now());
 
-        // Keep LIVE for now since we're still testing.
-        auction.setAuctionStatus(AuctionStatus.LIVE);
+        auction.setAuctionStatus(AuctionStatus.UPCOMING);
 
         Auction updatedAuction = auctionRepository.save(auction);
 

@@ -90,9 +90,9 @@ public class Auction {
 
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
-//Change LIVE->PENDING_APPROVAL
+
         if (auctionStatus == null) {
-            auctionStatus = AuctionStatus.LIVE;
+            auctionStatus = AuctionStatus.PENDING_APPROVAL;
         }
 
         if (auctionSource == null) {
