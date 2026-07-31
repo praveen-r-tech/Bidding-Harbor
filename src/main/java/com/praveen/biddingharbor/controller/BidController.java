@@ -2,6 +2,7 @@ package com.praveen.biddingharbor.controller;
 
 import com.praveen.biddingharbor.dto.bid.BidResponse;
 import com.praveen.biddingharbor.dto.bid.PlaceBidRequest;
+import com.praveen.biddingharbor.dto.bid.WinnerResponse;
 import com.praveen.biddingharbor.service.BidService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -50,5 +51,12 @@ public class BidController {
 
         return bidService.getMyBids(
                 authentication.getName());
+    }
+
+    @GetMapping("/auction/{auctionId}/winner")
+    public WinnerResponse getWinner(
+            @PathVariable Long auctionId) {
+
+        return bidService.getWinner(auctionId);
     }
 }

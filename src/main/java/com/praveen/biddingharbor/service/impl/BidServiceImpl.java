@@ -2,6 +2,7 @@ package com.praveen.biddingharbor.service.impl;
 
 import com.praveen.biddingharbor.dto.bid.BidResponse;
 import com.praveen.biddingharbor.dto.bid.PlaceBidRequest;
+import com.praveen.biddingharbor.dto.bid.WinnerResponse;
 import com.praveen.biddingharbor.entity.Auction;
 import com.praveen.biddingharbor.entity.Bid;
 import com.praveen.biddingharbor.entity.User;
@@ -140,6 +141,30 @@ public class BidServiceImpl implements BidService {
                 bid.getBidAmount(),
                 bid.getBidTime(),
                 bid.getBidStatus()
+        );
+    }
+
+    @Override
+    public WinnerResponse getWinner(Long auctionId) {
+
+        Auction auction = auctionRepository.findById(auctionId)
+                .orElseThrow(() ->
+                        new AuctionNotFoundException("Auction not found."));
+
+        if (auction.getWinner() == null) {
+            throw new AuctionNotFoundException(
+                    "Winner has not been decided yet.");
+        }
+
+        Bid winningBid = bidRepository
+                .findTopByAuctionOrderByBidAmountDesc(auction)
+                .orElseThrow(() ->
+                        new AuctionNotFoundException("Winning bid not found."));
+
+        return new WinnerResponse(
+                auction.getId(),
+                auction.getWinner().getUsername(),
+                winningBid.getBidAmount()
         );
     }
 }

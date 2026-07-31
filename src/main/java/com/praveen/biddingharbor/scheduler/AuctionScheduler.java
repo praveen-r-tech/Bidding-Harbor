@@ -1,8 +1,11 @@
 package com.praveen.biddingharbor.scheduler;
 
 import com.praveen.biddingharbor.entity.Auction;
+import com.praveen.biddingharbor.entity.Bid;
+import com.praveen.biddingharbor.entity.enums.BidStatus;
 import com.praveen.biddingharbor.entity.enums.AuctionStatus;
 import com.praveen.biddingharbor.repository.AuctionRepository;
+import com.praveen.biddingharbor.repository.BidRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,6 +20,7 @@ import java.util.List;
 public class AuctionScheduler {
 
     private final AuctionRepository auctionRepository;
+    private final BidRepository bidRepository;
 
     @Scheduled(fixedRate = 10000)
     public void updateAuctionStatuses() {
@@ -55,6 +59,29 @@ public class AuctionScheduler {
         for (Auction auction : auctions) {
 
             auction.setAuctionStatus(AuctionStatus.ENDED);
+
+            bidRepository.findTopByAuctionOrderByBidAmountDesc(auction)
+                    .ifPresent(winningBid -> {
+
+                        auction.setWinner(winningBid.getBidder());
+
+                        List<Bid> bids =
+                                bidRepository.findByAuctionOrderByBidAmountDesc(auction);
+
+                        for (Bid bid : bids) {
+
+                            if (bid.getId().equals(winningBid.getId())) {
+
+                                bid.setBidStatus(BidStatus.WON);
+
+                            } else {
+
+                                bid.setBidStatus(BidStatus.OUTBID);
+                            }
+
+                            bidRepository.save(bid);
+                        }
+                    });
 
             auctionRepository.save(auction);
 
