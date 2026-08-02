@@ -23,7 +23,7 @@ public interface AuctionService {
 
     AuctionResponse getAuction(Long auctionId);
 
-    List<AuctionResponse> getAllOpenAuctions();
+    Page<AuctionResponse> getAllOpenAuctions(Pageable pageable);
 
     List<AuctionResponse> getMyAuctions(String username);
 
@@ -42,8 +42,8 @@ public interface AuctionService {
             String adminUsername,
             RejectAuctionRequest request);
 
-    List<AuctionResponse> searchAuctions(
-            SearchAuctionRequest request);
+    Page<AuctionResponse> searchAuctions(
+            SearchAuctionRequest request,
+            Pageable pageable);
 
-    Page<AuctionResponse> getAuctions(Pageable pageable);
 }

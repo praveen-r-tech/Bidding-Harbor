@@ -117,12 +117,11 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public List<AuctionResponse> getAllOpenAuctions() {
+    public Page<AuctionResponse> getAllOpenAuctions(
+            Pageable pageable) {
 
-        return auctionRepository.findByAuctionStatus(AuctionStatus.LIVE)
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        return auctionRepository.findAll(pageable)
+                .map(this::mapToResponse);
     }
 
     @Override
@@ -238,21 +237,13 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public List<AuctionResponse> searchAuctions(
-            SearchAuctionRequest request) {
-
-        return auctionRepository.findAll(
-                        AuctionSpecification.search(request))
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
-    }
-
-    @Override
-    public Page<AuctionResponse> getAuctions(
+    public Page<AuctionResponse> searchAuctions(
+            SearchAuctionRequest request,
             Pageable pageable) {
 
-        return auctionRepository.findAll(pageable)
+        return auctionRepository.findAll(
+                        AuctionSpecification.search(request),
+                        pageable)
                 .map(this::mapToResponse);
     }
 

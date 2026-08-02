@@ -32,26 +32,23 @@ public class AuctionController {
     }
 
     @GetMapping
-    public List<AuctionResponse> getAllAuctions() {
-
-        return auctionService.getAllOpenAuctions();
-    }
-
-    @GetMapping("/paged")
-    public Page<AuctionResponse> getAuctions(
-
+    public Page<AuctionResponse> getAllAuctions(
             Pageable pageable) {
 
-        return auctionService.getAuctions(pageable);
+        return auctionService.getAllOpenAuctions(pageable);
     }
 
     @GetMapping("/search")
-    public List<AuctionResponse> searchAuctions(
+    public Page<AuctionResponse> searchAuctions(
 
             @ModelAttribute
-            SearchAuctionRequest request) {
+            SearchAuctionRequest request,
 
-        return auctionService.searchAuctions(request);
+            Pageable pageable) {
+
+        return auctionService.searchAuctions(
+                request,
+                pageable);
     }
 
     @GetMapping("/my")
