@@ -4,6 +4,7 @@ import com.praveen.biddingharbor.entity.Auction;
 import com.praveen.biddingharbor.entity.User;
 import com.praveen.biddingharbor.entity.enums.AuctionStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.math.BigDecimal;
@@ -11,7 +12,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface AuctionRepository extends JpaRepository<Auction, Long> {
+public interface AuctionRepository extends JpaRepository<Auction, Long>,
+        JpaSpecificationExecutor<Auction> {
 
     List<Auction> findBySeller(User seller);
 

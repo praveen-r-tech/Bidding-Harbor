@@ -1,9 +1,8 @@
 package com.praveen.biddingharbor.service;
 
-import com.praveen.biddingharbor.dto.auction.AuctionResponse;
-import com.praveen.biddingharbor.dto.auction.CreateAuctionRequest;
-import com.praveen.biddingharbor.dto.auction.RejectAuctionRequest;
-import com.praveen.biddingharbor.dto.auction.UpdateAuctionRequest;
+import com.praveen.biddingharbor.dto.auction.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -42,4 +41,9 @@ public interface AuctionService {
             Long auctionId,
             String adminUsername,
             RejectAuctionRequest request);
+
+    List<AuctionResponse> searchAuctions(
+            SearchAuctionRequest request);
+
+    Page<AuctionResponse> getAuctions(Pageable pageable);
 }

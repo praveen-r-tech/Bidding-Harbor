@@ -2,10 +2,13 @@ package com.praveen.biddingharbor.controller;
 
 import com.praveen.biddingharbor.dto.auction.AuctionResponse;
 import com.praveen.biddingharbor.dto.auction.CreateAuctionRequest;
+import com.praveen.biddingharbor.dto.auction.SearchAuctionRequest;
 import com.praveen.biddingharbor.dto.auction.UpdateAuctionRequest;
 import com.praveen.biddingharbor.service.AuctionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +35,23 @@ public class AuctionController {
     public List<AuctionResponse> getAllAuctions() {
 
         return auctionService.getAllOpenAuctions();
+    }
+
+    @GetMapping("/paged")
+    public Page<AuctionResponse> getAuctions(
+
+            Pageable pageable) {
+
+        return auctionService.getAuctions(pageable);
+    }
+
+    @GetMapping("/search")
+    public List<AuctionResponse> searchAuctions(
+
+            @ModelAttribute
+            SearchAuctionRequest request) {
+
+        return auctionService.searchAuctions(request);
     }
 
     @GetMapping("/my")

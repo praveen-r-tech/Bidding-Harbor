@@ -1,9 +1,6 @@
 package com.praveen.biddingharbor.service.impl;
 
-import com.praveen.biddingharbor.dto.auction.AuctionResponse;
-import com.praveen.biddingharbor.dto.auction.CreateAuctionRequest;
-import com.praveen.biddingharbor.dto.auction.RejectAuctionRequest;
-import com.praveen.biddingharbor.dto.auction.UpdateAuctionRequest;
+import com.praveen.biddingharbor.dto.auction.*;
 import com.praveen.biddingharbor.entity.Auction;
 import com.praveen.biddingharbor.entity.User;
 import com.praveen.biddingharbor.entity.enums.AuctionStatus;
@@ -14,7 +11,10 @@ import com.praveen.biddingharbor.exception.UserNotFoundException;
 import com.praveen.biddingharbor.repository.AuctionRepository;
 import com.praveen.biddingharbor.repository.UserRepository;
 import com.praveen.biddingharbor.service.AuctionService;
+import com.praveen.biddingharbor.specification.AuctionSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -235,6 +235,25 @@ public class AuctionServiceImpl implements AuctionService {
         Auction updatedAuction = auctionRepository.save(auction);
 
         return mapToResponse(updatedAuction);
+    }
+
+    @Override
+    public List<AuctionResponse> searchAuctions(
+            SearchAuctionRequest request) {
+
+        return auctionRepository.findAll(
+                        AuctionSpecification.search(request))
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    @Override
+    public Page<AuctionResponse> getAuctions(
+            Pageable pageable) {
+
+        return auctionRepository.findAll(pageable)
+                .map(this::mapToResponse);
     }
 
     private AuctionResponse mapToResponse(Auction auction) {
