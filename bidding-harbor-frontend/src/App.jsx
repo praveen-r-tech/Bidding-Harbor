@@ -1,6 +1,20 @@
+import { BrowserRouter } from "react-router-dom";
+import AuthProvider from "./context/AuthProvider";
+import { Navbar } from "./components/layout/Navbar";
+import { AppRoutes } from "./routes/AppRoutes";
+
 function App() {
   return (
-    <h1>Bidding Harbor</h1>
+    <BrowserRouter>
+      <AuthProvider>
+        <div className="app-container">
+          <Navbar />
+          <main className="main-content">
+            <AppRoutes />
+          </main>
+        </div>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 
